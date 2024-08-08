@@ -1,19 +1,18 @@
-#' Calculate Events Per Minute
+#' Calculate Event Frequency per Minute
 #'
-#' This function calculates the frequency of events (active cells) per minute from a binarized calcium matrix.
+#' This function calculates the frequency of events per minute for each cell in a binarized calcium matrix.
 #'
-#' @param calcium_matrix_binary A binarized matrix where each row represents a cell and each column represents a timepoint.
+#' @param calcium_matrix_binary A binarized matrix where each row represents a cell and each column represents a timepoint. Can be created with binarize()
 #' @param frame_rate The frame rate of the calcium imaging data (frames per second).
-#' @return A numeric vector representing the event frequency per minute for each cell.
+#' @param whole_population A logical value indicating whether to return the mean frequency of events per minute for all cells. Defaults to FALSE.
+#' @return A numeric array representing the event frequency per minute for each cell, or a single numeric value representing the mean frequency if whole_population is TRUE.
 #' @examples
-#' # Example binarized data
 #' binarized_data <- matrix(sample(c(0, 1), 100, replace = TRUE), nrow = 10)
-#' Frame rate (1 frame every two seconds -> 0.5 frames per second)
-#' frame_rate <- 0.5
-#' Calculate the event frequency per minute
+#' frame_rate <- 30
 #' event_frequency <- events_per_min(binarized_data, frame_rate)
+#' mean_event_frequency <- events_per_min(binarized_data, frame_rate, TRUE)
 #' @export
-events_per_min <- function(calcium_matrix_binary, frame_rate) {
+events_per_min <- function(calcium_matrix_binary, frame_rate, whole_population = FALSE) {
   # Count the number of events (spikes) for each cell
   event_counts <- rowSums(calcium_matrix_binary > 0)
 
@@ -23,5 +22,10 @@ events_per_min <- function(calcium_matrix_binary, frame_rate) {
   # Calculate the event frequency per minute for each cell
   event_frequency <- event_counts / total_time_minutes
 
-  return(event_frequency)
+  # Return the mean frequency if whole_population is TRUE
+  if (whole_population) {
+    return(mean(event_frequency))
+  } else {
+    return(event_frequency)
+  }
 }

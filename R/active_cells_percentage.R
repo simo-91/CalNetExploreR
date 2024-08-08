@@ -1,17 +1,24 @@
-#' Calculate Percentage of Active Cells Over Time
+#' Calculate Event Frequency per Minute
 #'
-#' This function calculates the percentage of active cells over time from a binarized calcium matrix.
+#' This function calculates the frequency of events per minute for each cell in a binarized calcium matrix.
 #'
-#' @param binarized_calcium_matrix A binarized matrix where each row represents a cell and each column represents a timepoint. Can be created using binarize()
-#' @return A data frame with the sum of active cells at each time point, the corresponding time, and the percentage of active cells.
+#' @param calcium_matrix_binary A binarized matrix where each row represents a cell and each column represents a timepoint. Can be created with binarize()
+#' @param frame_rate The frame rate of the calcium imaging data (frames per second).
+#' @return A numeric array representing the event frequency per minute for each cell.
 #' @examples
 #' binarized_data <- matrix(sample(c(0, 1), 100, replace = TRUE), nrow = 10)
-#' active_percentage <- active_cells_percentage(binarized_data)
+#' frame_rate <- 30
+#' event_frequency <- events_per_min(binarized_data, frame_rate)
 #' @export
-active_cells_percentage <- function(binarized_calcium_matrix) {
-  active_cells <- colSums(binarized_calcium_matrix)
-  active_cells_df <- as.data.frame(active_cells)
-  active_cells_df$Time <- 0:(nrow(active_cells_df) - 1)
-  active_cells_df$Perc <- active_cells_df$active_cells / nrow(binarized_calcium_matrix) * 100
-  return(active_cells_df)
+events_per_min <- function(calcium_matrix_binary, frame_rate) {
+  # Count the number of events (spikes) for each cell
+  event_counts <- rowSums(calcium_matrix_binary > 0)
+
+  # Calculate the total recording time in minutes
+  total_time_minutes <- ncol(calcium_matrix_binary) / frame_rate / 60
+
+  # Calculate the event frequency per minute for each cell
+  event_frequency <- event_counts / total_time_minutes
+
+  return(event_frequency)
 }
