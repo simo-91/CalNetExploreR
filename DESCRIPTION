@@ -8,3 +8,9 @@ Description: Functions for analyzing calcium imaging data and network metrics to
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
+Imports:
+    ggplot2,
+    reshape2,
+    dendextend,
+    cowplot,
+    ggpubr
