@@ -12,7 +12,7 @@
 #' event_frequency <- events_per_min(binarized_data, frame_rate)
 #' mean_event_frequency <- events_per_min(binarized_data, frame_rate, TRUE)
 #' @export
-events_per_min <- function(calcium_matrix_binary, frame_rate, whole_population = FALSE) {
+events_per_min <- function(calcium_matrix_binary, frame_rate, mean_all = FALSE) {
   # Count the number of events (spikes) for each cell
   event_counts <- rowSums(calcium_matrix_binary > 0)
 
@@ -23,7 +23,7 @@ events_per_min <- function(calcium_matrix_binary, frame_rate, whole_population =
   event_frequency <- event_counts / total_time_minutes
 
   # Return the mean frequency if whole_population is TRUE
-  if (whole_population) {
+  if (mean_all) {
     return(mean(event_frequency))
   } else {
     return(event_frequency)

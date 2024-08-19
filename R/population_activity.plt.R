@@ -2,18 +2,26 @@
 #'
 #' Generates a raster plot and line plot after performing hierarchical clustering on the data to sort similar cells.
 #'
-#' @param calcium_matrix_binary A binarized matrix where each row represents a cell and each column represents a timepoint. Can be created with binarize()
+#' @param binarized_calcium_matrix A binary matrix where each row represents a cell and each column represents a timepoint.
+#' @param binarize A logical value indicating whether to binarize the calcium matrix. If TRUE, the matrix will be binarized using binarize(). Defaults to FALSE.
 #' @return A combined plot showing the raster plot with hierarchical clustering and a line plot of population activity.
 #' @examples
-#' calcium_matrix_binary <- matrix(sample(c(0, 1), 1000, replace = TRUE), nrow = 10)
-#' plot <- population_activity.plt(calcium_matrix_binary)
+#' calcium_matrix <- matrix(runif(1000), nrow = 10)
+#' plot <- population_activity.plt(calcium_matrix, binarize = TRUE)
 #' @export
 #' @import ggplot2
 #' @import reshape2
 #' @import ggdendro
 #' @import cowplot
 #' @import ggpubr
-population_activity.plt <- function(calcium_matrix_binary) {
+population_activity.plt <- function(binarized_calcium_matrix, binarize = FALSE) {
+  # If binarize is TRUE, binarize the calcium matrix
+  if (binarize) {
+    calcium_matrix_binary <- binarize(binarized_calcium_matrix)
+  } else {
+    calcium_matrix_binary <- binarized_calcium_matrix
+  }
+
   # Transform the calcium matrix for plotting
   dfpeaks <- as.data.frame(t(calcium_matrix_binary))
   dfpeaks$time <- 0:(nrow(dfpeaks) - 1)
