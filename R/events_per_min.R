@@ -22,7 +22,7 @@ events_per_min <- function(binarized_calcium_matrix, frame_rate, mean_all = FALS
   # Calculate the event frequency per minute for each cell
   event_frequency <- event_counts / total_time_minutes
 
-  # Return the mean frequency if whole_population is TRUE
+  # Return the mean frequency if mean_all is TRUE
   if (mean_all) {
     return(mean(event_frequency))
   } else {
