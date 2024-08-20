@@ -14,6 +14,7 @@
 #' @import ggdendro
 #' @import cowplot
 #' @import ggpubr
+#' @importFrom stats hclust dist as.dendrogram order.dendrogram
 population_activity.plt <- function(binarized_calcium_matrix, binarize = FALSE) {
   # If binarize is TRUE, binarize the calcium matrix
   if (binarize) {
@@ -29,8 +30,8 @@ population_activity.plt <- function(binarized_calcium_matrix, binarize = FALSE) 
   colnames(meltPeaks) <- c('time', 'cell', 'Ca2+')
 
   # Perform hierarchical clustering
-  hc <- hclust(dist(calcium_matrix_binary, method = "euclidean"), method = "ward.D2")
-  dhc <- as.dendrogram(hc)
+  hc <- stats::hclust(stats::dist(calcium_matrix_binary, method = "euclidean"), method = "ward.D2")
+  dhc <- stats::as.dendrogram(hc)
 
   # Generate the dendrogram plot
   peaks.dendro <- ggdendro::ggdendrogram(dhc, rotate = TRUE, labels = FALSE) +
@@ -41,7 +42,7 @@ population_activity.plt <- function(binarized_calcium_matrix, binarize = FALSE) 
                    axis.ticks = ggplot2::element_blank())
 
   # Order the cells according to the hierarchical clustering
-  peaks.order <- order.dendrogram(dhc)
+  peaks.order <- stats::order.dendrogram(dhc)
   peaks.rows <- rownames(calcium_matrix_binary)
   peaks.rows <- as.data.frame(peaks.rows)
   meltPeaks$cell <- factor(x = meltPeaks$cell,
@@ -61,11 +62,11 @@ population_activity.plt <- function(binarized_calcium_matrix, binarize = FALSE) 
                    axis.text.y = ggplot2::element_blank(),
                    axis.text.x = ggplot2::element_blank(),
                    plot.title = ggplot2::element_text(colour = "red", hjust = .5)) +
-    ggplot2::ggtitle(paste0("Population activity over time"))
+    ggplot2::ggtitle("Population activity over time")
 
   # Calculate the percentage of active cells over time
-  total_cells <- nrow(calcium_matrix_binarized)
-  spksSUM <- colSums(calcium_matrix_binarized) / total_cells * 100
+  total_cells <- nrow(calcium_matrix_binary)
+  spksSUM <- colSums(calcium_matrix_binary) / total_cells * 100
   spksSUM_df <- data.frame(time = 0:(length(spksSUM) - 1), activity = spksSUM)
 
   # Plot the percentage of active cells over time
