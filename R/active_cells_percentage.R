@@ -1,24 +1,39 @@
-#' Calculate Event Frequency per Minute
+#' Calculate the Percentage of Active Cells Over Time
 #'
-#' This function calculates the frequency of events per minute for each cell in a binarized calcium matrix.
+#' This function calculates the percentage of active cells over time in a binarized calcium matrix.
+#' It can optionally plot the percentage of active cells over time.
 #'
-#' @param binarized_calcium_matrix A binarized matrix where each row represents a cell and each column represents a timepoint. Can be created with binarize()
-#' @param frame_rate The frame rate of the calcium imaging data (frames per second).
-#' @return A numeric array representing the event frequency per minute for each cell.
+#' @param calcium_matrix_binarized A binarized matrix where each row represents a cell and each column represents a timepoint. This matrix can be generated using the `binarize()` function.
+#' @param binarize A logical value indicating whether to binarize the calcium matrix. If TRUE, the function will apply the `binarize()` function to the calcium_matrix_binarized before calculation. Defaults to FALSE.
+#' @param plot A logical value indicating whether to generate a plot of the percentage of active cells over time. Defaults to FALSE.
+#' @return If `plot` is FALSE, returns a data frame containing the time points and the percentage of active cells. If `plot` is TRUE, returns a ggplot object of the percentage of active cells over time.
 #' @examples
-#' binarized_data <- matrix(sample(c(0, 1), 100, replace = TRUE), nrow = 10)
-#' frame_rate <- 30
-#' event_frequency <- events_per_min(binarized_data, frame_rate)
+#' calcium_matrix <- matrix(runif(1000), nrow = 10)
+#' result <- active_cells_percentage(calcium_matrix, binarize = TRUE)
+#' plot <- active_cells_percentage(calcium_matrix, binarize = TRUE, plot = TRUE)
 #' @export
-events_per_min <- function(binarized_calcium_matrix, frame_rate) {
-  # Count the number of events (spikes) for each cell
-  event_counts <- rowSums(binarized_calcium_matrix > 0)
+#' @import ggplot2
+#' @import ggpubr
+active_cells_percentage <- function(calcium_matrix_binarized, binarize = FALSE, plot = FALSE) {
+  # Optionally binarize the matrix
+  if (binarize) {
+    calcium_matrix_binarized <- binarize(calcium_matrix_binarized)
+  }
 
-  # Calculate the total recording time in minutes
-  total_time_minutes <- ncol(binarized_calcium_matrix) / frame_rate / 60
+  # Calculate the percentage of active cells over time
+  total_cells <- nrow(calcium_matrix_binarized)
+  spksSUM <- colSums(calcium_matrix_binarized) / total_cells * 100
+  spksSUM_df <- data.frame(time = 0:(length(spksSUM) - 1), activity = spksSUM)
 
-  # Calculate the event frequency per minute for each cell
-  event_frequency <- event_counts / total_time_minutes
-
-  return(event_frequency)
+  # If plot is TRUE, generate and return the plot
+  if (plot) {
+    spksSUM.plt <- ggplot2::ggplot(spksSUM_df, ggplot2::aes(time, activity)) +
+      ggplot2::geom_line() +
+      ggpubr::theme_pubr() +
+      ggplot2::ylab("Active Cells %") +
+      ggplot2::theme(axis.title.x = ggplot2::element_blank())
+    return(spksSUM.plt)
+  } else {
+    return(spksSUM_df)
+  }
 }

@@ -63,13 +63,16 @@ population_activity.plt <- function(binarized_calcium_matrix, binarize = FALSE) 
                    plot.title = ggplot2::element_text(colour = "red", hjust = .5)) +
     ggplot2::ggtitle(paste0("Population activity over time"))
 
-  # Calculate the sum of active cells over time
-  spksSUM <- colSums(calcium_matrix_binary > 0)
+  # Calculate the percentage of active cells over time
+  total_cells <- nrow(calcium_matrix_binarized)
+  spksSUM <- colSums(calcium_matrix_binarized) / total_cells * 100
   spksSUM_df <- data.frame(time = 0:(length(spksSUM) - 1), activity = spksSUM)
+
+  # Plot the percentage of active cells over time
   spksSUM.plt <- ggplot2::ggplot(spksSUM_df, ggplot2::aes(time, activity)) +
     ggplot2::geom_line() +
     ggpubr::theme_pubr() +
-    ggplot2::ylab("Active cells") +
+    ggplot2::ylab("Active Cells %") +
     ggplot2::theme(axis.title.x = ggplot2::element_blank())
 
   # Combine the raster plot and the activity plot
