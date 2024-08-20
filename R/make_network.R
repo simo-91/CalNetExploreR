@@ -1,31 +1,31 @@
-#' Create a Graph object from a binarized calcium matrix
+#' Create a Network object from a binarized calcium matrix
 #'
-#' This function produces a graph based on the maximum cross-correlation between cells' calcium activity.
+#' This function produces a network based on the maximum cross-correlation between cells' calcium activity.
 #' It supports both parallel and sequential processing. The user can specify the lag for the cross-correlation
 #' function and the correlation threshold for filtering edges.
 #'
 #' @param binarized_calcium_matrix A binarized matrix where each row represents a cell and each column represents a timepoint. This matrix can be generated using the `binarize()` function.
 #' @param parallel A logical value indicating whether to run the calculations in parallel. Defaults to FALSE.
 #' @param lag.max The maximum lag to use in the cross-correlation function (CCF). Defaults to 1.
-#' @param correlation_threshold The threshold value for filtering edges in the graph. Edges with a weight below this threshold are removed. Defaults to 0.3.
-#' @return An `igraph` object representing the graph of correlated cells.
+#' @param correlation_threshold The threshold value for filtering edges in the network (Pearsons coefficients go from -1 to +1). Set to "none" to disable filtering. Defaults to 0.5.
+#' @return An `igraph` object representing the network of correlated cells.
 #' @examples
 #' binarized_calcium_matrix <- matrix(sample(c(0, 1), 1000, replace = TRUE), nrow = 10)
-#' graph <- make_graph(binarized_calcium_matrix)
-#' graph_parallel <- make_graph(binarized_calcium_matrix, parallel = TRUE, lag.max = 2, correlation_threshold = 0.4)
+#' network <- make_network(binarized_calcium_matrix)
+#' network_parallel <- make_network(binarized_calcium_matrix, parallel = TRUE, lag.max = 2, correlation_threshold = 0.4)
+#' network_no_filter <- make_network(binarized_calcium_matrix, correlation_threshold = "none")
 #' @export
-#' @import igraph
-#' @import parallel
-make_graph <- function(binarized_calcium_matrix, parallel = FALSE, lag.max = 1, correlation_threshold = 0.3) {
-  library(igraph)
-  library(parallel)
+#' @importFrom igraph graph.adjacency delete.edges E
+#' @importFrom parallel detectCores makeCluster clusterExport clusterEvalQ parLapply stopCluster
+#' @importFrom utils txtProgressBar setTxtProgressBar
+make_network <- function(binarized_calcium_matrix, parallel = FALSE, lag.max = 1, correlation_threshold = 0.5) {
 
   # Transpose the matrix for cross-correlation calculation
   T.allcellst <- t(binarized_calcium_matrix)
 
   # Define a function to find max CCF between two signals within a specified lag range
   max_CCF <- function(a, b, lag.max) {
-    d <- ccf(a, b, plot = FALSE, lag.max = lag.max)
+    d <- stats::ccf(a, b, plot = FALSE, lag.max = lag.max)
     cor <- d$acf[,,1]
     return(max(cor))
   }
@@ -36,10 +36,10 @@ make_graph <- function(binarized_calcium_matrix, parallel = FALSE, lag.max = 1, 
 
   if (parallel) {
     # Set up parallel processing
-    n_cores <- detectCores()
-    cl <- makeCluster(n_cores)
-    clusterExport(cl, c("T.allcellst", "max_CCF", "lag.max"))
-    clusterEvalQ(cl, {
+    n_cores <- parallel::detectCores()
+    cl <- parallel::makeCluster(n_cores)
+    parallel::clusterExport(cl, c("T.allcellst", "max_CCF", "lag.max"))
+    parallel::clusterEvalQ(cl, {
       library(matrixStats)
     })
 
@@ -49,24 +49,24 @@ make_graph <- function(binarized_calcium_matrix, parallel = FALSE, lag.max = 1, 
     }
 
     # Loop through upper triangular part of the matrix in parallel
-    pb <- txtProgressBar(min = 0, max = n_cols, style = 3)
+    pb <- utils::txtProgressBar(min = 0, max = n_cols, style = 3)
     for (i in 1:(n_cols - 1)) {
-      res <- parLapply(cl, (i + 1):n_cols, max_CCF_parallel, i = i)
+      res <- parallel::parLapply(cl, (i + 1):n_cols, max_CCF_parallel, i = i)
       cmat.allcellst[i, (i + 1):n_cols] <- unlist(res)
-      setTxtProgressBar(pb, i)
+      utils::setTxtProgressBar(pb, i)
     }
 
     # Clean up parallel processing
-    stopCluster(cl)
+    parallel::stopCluster(cl)
     close(pb)
   } else {
     # Sequential computation
-    pb <- txtProgressBar(min = 0, max = n_cols, style = 3)
+    pb <- utils::txtProgressBar(min = 0, max = n_cols, style = 3)
     for (i in 1:(n_cols - 1)) {
       for (j in (i + 1):n_cols) {
         cmat.allcellst[i, j] <- max_CCF(T.allcellst[, i], T.allcellst[, j], lag.max)
       }
-      setTxtProgressBar(pb, i)
+      utils::setTxtProgressBar(pb, i)
     }
     close(pb)
   }
@@ -78,11 +78,13 @@ make_graph <- function(binarized_calcium_matrix, parallel = FALSE, lag.max = 1, 
   # Replace NaNs with 0 (to handle cases where the time-series might be constant)
   cmat.allcellst[is.na(cmat.allcellst)] <- 0
 
-  # Create a graph from the correlation matrix
-  graph <- graph.adjacency(as.matrix(cmat.allcellst), mode = "undirected", weighted = TRUE, diag = FALSE)
+  # Create a network from the correlation matrix
+  network <- igraph::graph.adjacency(as.matrix(cmat.allcellst), mode = "undirected", weighted = TRUE, diag = FALSE)
 
-  # Apply the correlation threshold to filter edges
-  graph <- delete.edges(graph, which(E(graph)$weight < correlation_threshold))
+  # Apply the correlation threshold to filter edges, if specified
+  if (correlation_threshold != "none") {
+    network <- igraph::delete.edges(network, which(igraph::E(network)$weight < correlation_threshold))
+  }
 
-  return(graph)
+  return(network)
 }

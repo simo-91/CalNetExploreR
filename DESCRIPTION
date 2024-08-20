@@ -1,11 +1,11 @@
 Package: CalNetExploreR
 Type: Package
-Title: A package to explore and visualize calcium live imaging data
+Title: A Package to Explore and Visualize Calcium Live Imaging Data
 Version: 0.1.0
-Author: Simo91
-Maintainer: Simo91 sim.lenci@gmail.com
-Description: Functions for analyzing calcium imaging data and network metrics to compare biological conditions.
-License: What license is it under?
+Author: Simone Lenci
+Maintainer: Simo91 <sim.lenci@gmail.com>
+Description: CalNetExploreR provides a suite of functions for the analysis and visualization of calcium imaging data. It includes tools for network analysis, community detection, event frequency calculation, and graph-based visualization to compare and explore biological conditions using calcium live imaging datasets. The package is designed to help researchers gain insights into calcium signaling dynamics and the underlying network structures in biological systems.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
@@ -13,4 +13,10 @@ Imports:
     reshape2,
     dendextend,
     cowplot,
-    ggpubr
+    ggpubr,
+    igraph,
+    ggraph,
+    viridis,
+    RColorBrewer,
+    ggdendro
+RoxygenNote: 7.3.2
