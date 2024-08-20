@@ -58,10 +58,14 @@ plot_network <- function(graph, coordinates, label = "communities", cell_ID = ro
 
     # Calculate community sizes
     community_sizes <- table(node_colors)
+    community_sizes_numeric <- as.numeric(community_sizes[as.character(node_colors)])
 
-    # Filter out smaller communities (e.g., less than 5 members)
+    # Filter out smaller communities (e.g., less than 2 members)
     large_communities <- names(community_sizes[community_sizes >= 2])
     node_colors <- factor(node_colors, levels = large_communities)
+
+    # Assign node sizes based on community size
+    node_sizes <- community_sizes_numeric
 
     color_scale <- scale_fill_manual(values = communities.palette.big, drop = FALSE, guide = guide_legend(title = "Communities", ncol = 1))
 
@@ -78,6 +82,7 @@ plot_network <- function(graph, coordinates, label = "communities", cell_ID = ro
     }
 
     node_colors <- frequency_values
+    node_sizes <- frequency_values
     color_scale <- scale_fill_gradientn(name = "Frequency (events/min)", colors = rev(heat.colors(5)))
 
     # Use "mako" color scale for edges if frequency is labeled
@@ -93,7 +98,7 @@ plot_network <- function(graph, coordinates, label = "communities", cell_ID = ro
     geom_edge_link(aes(colour = weight, alpha = weight)) +
     scale_edge_alpha_continuous(range = c(0.1, 1), guide = "none") +
     edge_color_scale +
-    geom_node_point(aes(fill = node_colors, size = degree(graph)), shape = 21) +
+    geom_node_point(aes(fill = node_colors, size = node_sizes), shape = 21) +
     geom_node_text(aes(label = cell_ID), colour = "black", fontface = 1, size = 3) +
     color_scale +
     scale_size_continuous(range = c(5, 12), guide = "none") +
