@@ -6,16 +6,25 @@
 #' @param graph An igraph object representing the network. Can be created with `make_network()`.
 #' @param coordinates A data frame containing X and Y coordinates for each cell ID. Must include columns "X", "Y", and "Cell".
 #' @param label A character string indicating what to label the cells with. Options are "communities" or "frequency". Defaults to "communities".
-#' @param cell_ID A vector of cell IDs. Defaults to the row names of `calcium_matrix_binarized`.
+#' @param cell_ID A dataframe of cell IDs (should contain X and Y columns). If set to "none", the nodes will be labeled with their numbers. Defaults to "none".
 #' @param reverse_y_scale A logical value indicating whether to reverse the Y scale in the plot (useful for matching image coordinates). Defaults to FALSE.
 #' @param frequency_values A numeric vector containing the frequency of events per minute for each cell. Required if `label = "frequency"`.
 #' @param correlation_threshold A numeric value specifying the threshold for filtering edges by weight. Set to "none" to disable filtering. Defaults to 0.3.
 #' @return A ggplot object representing the network graph.
 #' @examples
-#' # Example usage:
+#' # Simulate a binarized calcium matrix
+#' binarized_calcium_matrix <- matrix(sample(c(0, 1), 100, replace = TRUE), nrow = 10)
+#'
+#' # Generate the network graph
 #' graph <- make_network(binarized_calcium_matrix)
+#'
+#' # Simulate XY coordinates for the cells
 #' posXY <- data.frame(X = runif(10), Y = runif(10), Cell = 1:10)
-#' frequency_values <- runif(10, 0, 5) # Simulated frequency data
+#'
+#' # Simulate frequency values for the cells
+#' frequency_values <- runif(10, 0, 5)
+#'
+#' # Plot the network graph with frequency as the label
 #' plot <- plot_network(graph, coordinates = posXY, label = "frequency", frequency_values = frequency_values)
 #' print(plot)
 #' @export
@@ -26,10 +35,10 @@
 #' @importFrom ggplot2 aes scale_fill_manual scale_fill_gradientn scale_size_continuous theme margin unit element_text
 #' @importFrom ggplot2 ggtitle
 #' @importFrom RColorBrewer brewer.pal
-plot_network <- function(graph, coordinates, label = "communities", cell_ID = rownames(calcium_matrix_binarized), reverse_y_scale = FALSE, frequency_values = NULL, correlation_threshold = 0.3) {
+plot_network <- function(graph, coordinates, label = "communities", cell_ID = "none", reverse_y_scale = FALSE, frequency_values = NULL, correlation_threshold = 0.3) {
 
-  # Ensure that the length of cell_ID matches the number of nodes in the graph
-  if (length(cell_ID) != igraph::vcount(graph)) {
+  # Ensure that cell_ID is valid
+  if (cell_ID != "none" && length(cell_ID) != igraph::vcount(graph)) {
     stop("The length of cell_ID must match the number of nodes in the graph.")
   }
 
@@ -40,6 +49,11 @@ plot_network <- function(graph, coordinates, label = "communities", cell_ID = ro
   # Apply the correlation threshold to filter edges, if specified
   if (correlation_threshold != "none") {
     graph <- igraph::delete.edges(graph, which(igraph::E(graph)$weight < correlation_threshold))
+  }
+
+  # Handle cell_ID assignment
+  if (cell_ID == "none") {
+    cell_ID <- as.character(1:igraph::vcount(graph))
   }
 
   # Generate a large palette for community coloring (only used if label = "communities")
@@ -102,12 +116,13 @@ plot_network <- function(graph, coordinates, label = "communities", cell_ID = ro
     ggraph::scale_edge_alpha_continuous(range = c(0.1, 1), guide = "none") +
     edge_color_scale +
     ggraph::geom_node_point(ggplot2::aes(fill = node_colors, size = node_sizes), shape = 21) +
-    ggraph::geom_node_text(ggplot2::aes(label = cell_ID), colour = "black", fontface = 1, size = 3) +
+    ggraph::geom_node_text(ggplot2::aes(label = cell_ID), colour = "black", fontface = "plain", size = 3) +  # Use a common font
     color_scale +
     ggplot2::scale_size_continuous(range = c(5, 12), guide = "none") +
     ggraph::theme_graph(background = "white", plot_margin = ggplot2::margin(5, 5, 5, 5)) +
     ggplot2::theme(legend.position = "right", legend.margin = ggplot2::margin(1, 1, 1, 1),
-                   legend.key.size = ggplot2::unit(0.5, 'cm')) +
+                   legend.key.size = ggplot2::unit(0.5, 'cm'),
+                   text = ggplot2::element_text(family = "sans")) +  # Set default font family
     ggplot2::ggtitle("Network Graph")
 
   # Reverse the Y scale if required

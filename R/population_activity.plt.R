@@ -4,18 +4,20 @@
 #'
 #' @param binarized_calcium_matrix A binary matrix where each row represents a cell and each column represents a timepoint.
 #' @param binarize A logical value indicating whether to binarize the calcium matrix. If TRUE, the matrix will be binarized using binarize(). Defaults to FALSE.
+#' @param dendrogram A logical value indicating whether to include the dendrogram plot. Defaults to FALSE.
 #' @return A combined plot showing the raster plot with hierarchical clustering and a line plot of population activity.
 #' @examples
 #' calcium_matrix <- matrix(runif(1000), nrow = 10)
-#' plot <- population_activity.plt(calcium_matrix, binarize = TRUE)
+#' plot <- population_activity.plt(calcium_matrix, binarize = TRUE, dendrogram = TRUE)
 #' @export
 #' @import ggplot2
 #' @import reshape2
 #' @import ggdendro
-#' @import cowplot
-#' @import ggpubr
 #' @importFrom stats hclust dist as.dendrogram order.dendrogram
-population_activity.plt <- function(binarized_calcium_matrix, binarize = FALSE) {
+#' @importFrom cowplot align_plots plot_grid
+#' @importFrom ggpubr theme_pubr
+#' @importFrom grid viewport grid.newpage
+population_activity.plt <- function(binarized_calcium_matrix, binarize = FALSE, dendrogram = FALSE) {
   # If binarize is TRUE, binarize the calcium matrix
   if (binarize) {
     calcium_matrix_binary <- binarize(binarized_calcium_matrix)
@@ -77,8 +79,14 @@ population_activity.plt <- function(binarized_calcium_matrix, binarize = FALSE) 
     ggplot2::theme(axis.title.x = ggplot2::element_blank())
 
   # Combine the raster plot and the activity plot
-  plots <- cowplot::align_plots(raster.hc, spksSUM.plt, align = 'v', axis = 'l')
-  combined_plot <- cowplot::plot_grid(plots[[1]], spksSUM.plt, ncol = 1, rel_heights = c(4.5, 1))
-
-  return(combined_plot)
+  if (dendrogram) {
+    grid::grid.newpage()
+    print(raster.hc, vp = grid::viewport(x = 0.4, y = 0.6, width = 0.8, height = 0.8))
+    print(peaks.dendro, vp = grid::viewport(x = 0.88, y = 0.58, width = 0.25, height = 0.86))
+    print(spksSUM.plt, vp = grid::viewport(x = 0.4, y = 0.1, width = 0.8, height = 0.2))
+  } else {
+    plots <- cowplot::align_plots(raster.hc, spksSUM.plt, align = 'v', axis = 'l')
+    combined_plot <- cowplot::plot_grid(plots[[1]], spksSUM.plt, ncol = 1, rel_heights = c(4.5, 1))
+    return(combined_plot)
+  }
 }
