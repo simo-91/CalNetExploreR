@@ -19,5 +19,6 @@ Imports:
     viridis,
     RColorBrewer,
     ggdendro,
-    factoextra
+    factoextra,
+    dplyr
 RoxygenNote: 7.3.2
