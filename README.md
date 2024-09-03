@@ -6,7 +6,7 @@
 
 You can install the development version of CalNetExploreR from GitHub using the following commands:
 
-## Install devtools if you haven't already
+Install devtools if you haven't already:
 
 `install.packages("devtools")`
 
