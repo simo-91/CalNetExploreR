@@ -10,6 +10,29 @@ Install devtools if you haven't already:
 
 `install.packages("devtools")`
 
+The `CalNetExploreR` package relies on several R packages for its functionality. Make sure to install these dependencies before using `CalNetExploreR`. You can install these packages using the command `install.packages("package_name")`.
+
+Here is the list of dependencies:
+
+- **ggplot2**: For data visualization and plotting graphs.
+- **reshape2**: For data reshaping and melting data frames.
+- **ggdendro**: For creating dendrogram plots.
+- **cowplot**: For combining multiple plots into a single plot.
+- **ggpubr**: For publication-ready plots with additional theme options.
+- **grid**: For viewport manipulation and custom plot arrangements.
+- **igraph**: For creating and analyzing networks and graphs.
+- **ggraph**: For plotting networks and graphs with ggplot2.
+- **factoextra**: For visualizing PCA results and extracting eigenvalues.
+- **dplyr**: For data manipulation and summarization.
+- **RColorBrewer**: For color palettes used in plots.
+
+### Installation of Dependencies
+
+To ensure all dependencies are installed, you can run the following command:
+
+`install.packages(c("ggplot2", "reshape2", "ggdendro", "cowplot", "ggpubr", 
+                   "grid", "ggraph", "igraph", "factoextra", "dplyr", "RColorBrewer"))`
+
 ## Install CalNetExploreR from GitHub
 
 `devtools::install_github("simo-91/CalNetExploreR")`
