@@ -12,7 +12,7 @@ Install devtools if you haven't already:
 
 ## Install CalNetExploreR from GitHub
 
-`devtools::install_github("your-github-username/CalNetExploreR")`
+`devtools::install_github("Simo-91/CalNetExploreR")`
 
 ## Usage
 
