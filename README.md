@@ -1,6 +1,6 @@
-# CalNetExploreR
+# CalciumNetExploreR
 
-**CalNetExploreR** is an R package designed for comprehensive calcium imaging data analysis, including normalization, binarization, network creation, and various advanced visualizations. The package provides an integrated pipeline to streamline the analysis of calcium imaging data from live imaging experiments.
+**CalciumNetExploreR** is an R package designed for comprehensive calcium imaging data analysis, including normalization, binarization, network creation, and various advanced visualizations. The package provides an integrated pipeline to streamline the analysis of calcium imaging data from live imaging experiments.
 
 ## Installation
 
@@ -10,7 +10,7 @@ Install devtools if you haven't already:
 
 `install.packages("devtools")`
 
-The `CalNetExploreR` package relies on several R packages for its functionality. Make sure to install these dependencies before using `CalNetExploreR`. You can install these packages using the command `install.packages("package_name")`.
+The `CalciumNetExploreR` package relies on several R packages for its functionality. Make sure to install these dependencies before using `CalNetExploreR`. You can install these packages using the command `install.packages("package_name")`.
 
 Here is the list of dependencies:
 
