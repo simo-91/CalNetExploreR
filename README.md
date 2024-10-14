@@ -77,7 +77,7 @@ calcium_matrix <- matrix(runif(1000), nrow = 10)
 coordinates <- data.frame(X = runif(10), Y = runif(10), Cell = 1:10)
 
 # Population Activity Plot with a dendrogram
-population_plot <- population_activity.plt(binarized_calcium_matrix = results$binarized_matrix, binarize = FALSE, dendrogram = TRUE)
+population_plot <- population_activity(binarized_calcium_matrix = results$binarized_matrix, binarize = FALSE, dendrogram = TRUE)
 print(population_plot)
 
 # PCA Analysis with a scree plot

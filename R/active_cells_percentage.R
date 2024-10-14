@@ -23,11 +23,11 @@ active_cells_percentage <- function(calcium_matrix_binarized, binarize = FALSE, 
   # Calculate the percentage of active cells over time
   total_cells <- nrow(calcium_matrix_binarized)
   spksSUM <- colSums(calcium_matrix_binarized) / total_cells * 100
-  spksSUM_df <- data.frame(time = 0:(length(spksSUM) - 1), activity = spksSUM)
+  spksSUM_df <- data.frame(time = 0:(length(spksSUM) - 1), Coactive_Cells = spksSUM)
 
   # If plot is TRUE, generate and return the plot
   if (plot) {
-    spksSUM.plt <- ggplot2::ggplot(spksSUM_df, ggplot2::aes(time, activity)) +
+    spksSUM.plt <- ggplot2::ggplot(spksSUM_df, ggplot2::aes(time, Coactive_Cells)) +
       ggplot2::geom_line() +
       ggpubr::theme_pubr() +
       ggplot2::ylab("Active Cells %") +

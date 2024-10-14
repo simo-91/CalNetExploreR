@@ -17,7 +17,7 @@
 #' @importFrom cowplot align_plots plot_grid
 #' @importFrom ggpubr theme_pubr
 #' @importFrom grid viewport grid.newpage
-population_activity.plt <- function(binarized_calcium_matrix, binarize = FALSE, dendrogram = FALSE) {
+population_activity <- function(binarized_calcium_matrix, binarize = FALSE, dendrogram = FALSE) {
   # If binarize is TRUE, binarize the calcium matrix
   if (binarize) {
     calcium_matrix_binary <- binarize(binarized_calcium_matrix)

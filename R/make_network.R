@@ -6,7 +6,8 @@
 #' @param binarized_calcium_matrix A binarized matrix where each row represents a cell and each column represents a timepoint. This matrix can be generated using the `binarize()` function.
 #' @param lag.max The maximum lag to use in the cross-correlation function (CCF). Defaults to 1.
 #' @param correlation_threshold The threshold value for filtering edges in the network (Pearson's coefficients go from -1 to +1). Set to "none" to disable filtering. Defaults to "none".
-#' @return An `igraph` object representing the network of correlated cells.
+#' @param save_cmat A logical indicating whether to return the correlation matrix along with the network. Defaults to FALSE.
+#' @return If `save_cmat = TRUE`, returns a list with the `igraph` object and the correlation matrix. If `save_cmat = FALSE`, returns just the `igraph` object.
 #' @examples
 #' binarized_calcium_matrix <- matrix(sample(c(0, 1), 1000, replace = TRUE), nrow = 10)
 #' network <- make_network(binarized_calcium_matrix)
@@ -14,7 +15,7 @@
 #' @export
 #' @importFrom igraph graph.adjacency delete.edges E
 #' @importFrom utils txtProgressBar setTxtProgressBar
-make_network <- function(binarized_calcium_matrix, lag.max = 1, correlation_threshold = "none") {
+make_network <- function(binarized_calcium_matrix, lag.max = 1, correlation_threshold = "none", save_cmat = FALSE) {
 
   # Transpose the matrix for cross-correlation calculation
   T.allcellst <- t(binarized_calcium_matrix)
@@ -48,12 +49,17 @@ make_network <- function(binarized_calcium_matrix, lag.max = 1, correlation_thre
   cmat.allcellst[is.na(cmat.allcellst)] <- 0
 
   # Create a network from the correlation matrix
-  network <- igraph::graph.adjacency(as.matrix(cmat.allcellst), mode = "undirected", weighted = TRUE, diag = FALSE)
+  graph <- igraph::graph_from_adjacency_matrix(as.matrix(cmat.allcellst), mode = "undirected", weighted = TRUE, diag = FALSE)
 
   # Apply the correlation threshold to filter edges, if specified
   if (correlation_threshold != "none") {
-    network <- igraph::delete.edges(network, which(igraph::E(network)$weight < correlation_threshold))
+    graph <- igraph::delete_edges(graph, which(igraph::E(graph)$weight < correlation_threshold))
   }
 
-  return(network)
+  # Return the graph and optionally the correlation matrix
+  if (save_cmat) {
+    return(list(graph = graph, correlation_matrix = cmat.allcellst))
+  } else {
+    return(graph)
+  }
 }
