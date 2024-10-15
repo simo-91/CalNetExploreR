@@ -28,7 +28,7 @@
 #' plot <- plot_network(graph, coordinates = posXY, label = "frequency", frequency_values = frequency_values)
 #' print(plot)
 #' @export
-#' @importFrom igraph vcount delete.edges E
+#' @importFrom igraph vcount delete_edges E
 #' @importFrom grDevices colors
 #' @importFrom grDevices heat.colors
 #' @importFrom ggraph ggraph geom_edge_link geom_node_point geom_node_text theme_graph scale_edge_color_viridis scale_edge_alpha_continuous
@@ -37,23 +37,20 @@
 #' @importFrom RColorBrewer brewer.pal
 plot_network <- function(graph, coordinates, label = "communities", cell_ID = "none", reverse_y_scale = FALSE, frequency_values = NULL, correlation_threshold = 0.3) {
 
-  # Ensure that cell_ID is valid
-  if (cell_ID != "none" && length(cell_ID) != igraph::vcount(graph)) {
-    stop("The length of cell_ID must match the number of nodes in the graph.")
-  }
-
   # Set layout for the graph using the provided coordinates
   layout <- as.matrix(coordinates[, c("X", "Y")])
   rownames(layout) <- coordinates$Cell
 
   # Apply the correlation threshold to filter edges, if specified
   if (correlation_threshold != "none") {
-    graph <- igraph::delete.edges(graph, which(igraph::E(graph)$weight < correlation_threshold))
+    graph <- igraph::delete_edges(graph, which(igraph::E(graph)$weight < correlation_threshold))
   }
 
   # Handle cell_ID assignment
-  if (cell_ID == "none") {
+  if (identical(cell_ID, "none")) {
     cell_ID <- as.character(1:igraph::vcount(graph))
+  } else if (length(cell_ID) != igraph::vcount(graph)) {
+    stop("The length of cell_ID must match the number of nodes in the graph.")
   }
 
   # Generate a large palette for community coloring (only used if label = "communities")
@@ -70,7 +67,7 @@ plot_network <- function(graph, coordinates, label = "communities", cell_ID = "n
 
   # Determine how to label the nodes
   if (label == "communities") {
-    community_detection <- igraph::leading.eigenvector.community(graph, options = list(maxiter = 100000000))
+    community_detection <- igraph::cluster_leading_eigen(graph, options = list(maxiter = 100000000))
     node_colors <- factor(community_detection$membership)
 
     # Calculate community sizes
