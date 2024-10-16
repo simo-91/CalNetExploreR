@@ -9,6 +9,8 @@
 #' @param dendrogram A logical value indicating whether to include a dendrogram in the population activity plot. Defaults to FALSE.
 #' @param correlation_threshold A numeric value specifying the threshold for filtering edges by weight in the network analysis. Set to "none" to disable filtering. Defaults to 0.3.
 #' @param frame_rate A numeric value specifying the frame rate (in Hz) for the PSD analysis. Defaults to 0.5.
+#' @param lag.max A numeric value specifying the lag to be used in the network creation step. Defaults to 1.
+#' @param samplename A character string specifying the name of the sample. Used to name saved plot images.
 #' @return A list containing the results of each analysis step, including plots.
 #' \itemize{
 #'   \item \code{normalized_matrix}: The normalized calcium matrix.
@@ -23,10 +25,11 @@
 #' @examples
 #' calcium_matrix <- matrix(runif(1000), nrow = 10)
 #' coordinates <- data.frame(X = runif(10), Y = runif(10), Cell = 1:10)
-#' results <- pipeline(calcium_matrix, coordinates = coordinates)
+#' results <- pipeline(calcium_matrix, coordinates = coordinates, samplename = "sample_001")
 #' @export
+#' @importFrom ggplot2 ggsave
 
-pipeline <- function(calcium_matrix, coordinates, dendrogram = FALSE, correlation_threshold = 0.3, frame_rate = 0.5) {
+pipeline <- function(calcium_matrix, coordinates, dendrogram = FALSE, correlation_threshold = 0.3, frame_rate = 0.5, lag.max = 1, samplename = "sample") {
 
   # Ensure coordinates are provided and valid
   if (is.null(coordinates) || !all(c("X", "Y", "Cell") %in% colnames(coordinates))) {
@@ -43,7 +46,7 @@ pipeline <- function(calcium_matrix, coordinates, dendrogram = FALSE, correlatio
   pop_activity_plot <- population_activity.plt(binarized_matrix, binarize = FALSE, dendrogram = dendrogram)
 
   # Step 4: Network Creation
-  network <- make_network(binarized_matrix, lag.max = 1, correlation_threshold = correlation_threshold)
+  network <- make_network(binarized_matrix, lag.max = lag.max, correlation_threshold = correlation_threshold)
 
   # Step 5: Network Plotting
   network_plot <- plot_network(graph = network, coordinates = coordinates, label = "communities", correlation_threshold = correlation_threshold)
@@ -65,6 +68,13 @@ pipeline <- function(calcium_matrix, coordinates, dendrogram = FALSE, correlatio
   print(pca_plot)
   print(psd_plot)
 
+  # Save plots as images using samplename
+  ggplot2::ggsave(paste0(samplename, "_population_activity_plot.png"), plot = pop_activity_plot)
+  ggplot2::ggsave(paste0(samplename, "_network_plot.png"), plot = network_plot)
+  ggplot2::ggsave(paste0(samplename, "_degree_plot.png"), plot = degree_plot)
+  ggplot2::ggsave(paste0(samplename, "_pca_plot.png"), plot = pca_plot)
+  ggplot2::ggsave(paste0(samplename, "_psd_plot.png"), plot = psd_plot)
+
   # Return a list containing all results
   return(list(
     normalized_matrix = normalized_matrix,
@@ -77,4 +87,3 @@ pipeline <- function(calcium_matrix, coordinates, dendrogram = FALSE, correlatio
     psd_plot = psd_plot
   ))
 }
-
