@@ -2,7 +2,7 @@
 #'
 #' This function runs a comprehensive analysis pipeline on calcium imaging data, including normalization, binarization,
 #' population activity plotting, network creation and plotting, PCA analysis, power spectral density (PSD) analysis,
-#' and degree distribution analysis. The function requires the user to provide coordinates for the cells.
+#' degree distribution analysis, and various network metrics calculations (e.g., clustering coefficient, global efficiency).
 #'
 #' @param calcium_matrix A matrix where each row represents a cell and each column represents a timepoint.
 #' @param coordinates A data frame containing X and Y coordinates for each cell. Must include columns "X", "Y", and "Cell".
@@ -10,26 +10,12 @@
 #' @param correlation_threshold A numeric value specifying the threshold for filtering edges by weight in the network analysis. Set to "none" to disable filtering. Defaults to 0.3.
 #' @param frame_rate A numeric value specifying the frame rate (in Hz) for the PSD analysis. Defaults to 0.5.
 #' @param lag.max A numeric value specifying the lag to be used in the network creation step. Defaults to 1.
+#' @param big_community_min_members An integer specifying the minimum number of members for a community to be considered "big." Defaults to 5.
 #' @param samplename A character string specifying the name of the sample. Used to name saved plot images.
-#' @return A list containing the results of each analysis step, including plots.
-#' \itemize{
-#'   \item \code{normalized_matrix}: The normalized calcium matrix.
-#'   \item \code{binarized_matrix}: The binarized calcium matrix.
-#'   \item \code{population_activity_plot}: The population activity plot.
-#'   \item \code{network}: The network object created from the binarized matrix.
-#'   \item \code{network_plot}: The plot of the network graph.
-#'   \item \code{degree_plot}: The degree distribution plot of the network.
-#'   \item \code{pca_plot}: The scree plot from PCA analysis.
-#'   \item \code{psd_plot}: The power spectral density (PSD) plot.
-#' }
-#' @examples
-#' calcium_matrix <- matrix(runif(1000), nrow = 10)
-#' coordinates <- data.frame(X = runif(10), Y = runif(10), Cell = 1:10)
-#' results <- pipeline(calcium_matrix, coordinates = coordinates, samplename = "sample_001")
+#' @return A list containing the results of each analysis step, including plots and calculated features.
 #' @export
 #' @importFrom ggplot2 ggsave
-
-pipeline <- function(calcium_matrix, coordinates, dendrogram = FALSE, correlation_threshold = 0.3, frame_rate = 0.5, lag.max = 1, samplename = "sample") {
+pipeline <- function(calcium_matrix, coordinates, dendrogram = FALSE, correlation_threshold = 0.3, frame_rate = 0.5, lag.max = 1, big_community_min_members = 5, samplename = "sample") {
 
   # Ensure coordinates are provided and valid
   if (is.null(coordinates) || !all(c("X", "Y", "Cell") %in% colnames(coordinates))) {
@@ -54,19 +40,24 @@ pipeline <- function(calcium_matrix, coordinates, dendrogram = FALSE, correlatio
   # Step 6: Degree Distribution Analysis
   degree_plot <- degrees(graph = network, plot = TRUE)
 
-  # Step 7: PCA Analysis
-  pca_result <- pca(normalized_matrix, binarize = FALSE, plot = TRUE)
+  # Step 7: PCA Analysis (applies to binarized matrix)
+  pca_result <- pca(binarized_matrix, binarize = FALSE, plot = TRUE)
   pca_plot <- pca_result
+  pca_result <- pca(binarized_matrix, binarize = FALSE, plot = FALSE)
 
-  # Step 8: PSD Analysis
-  psd_plot <- PSD.plt(normalized_matrix, binarize = FALSE, frame_rate = frame_rate)
+  # Step 8: PSD Analysis (applies to binarized matrix)
+  psd_plot <- PSD.plt(binarized_matrix, binarize = FALSE, frame_rate = frame_rate)
 
-  # Print all plots individually
-  print(pop_activity_plot)
-  print(network_plot)
-  print(degree_plot)
-  print(pca_plot)
-  print(psd_plot)
+  # Step 9: Calculate variance explained by the top 5 principal components
+  top5pc_variance <- get_top5pc_variance(pca_result)
+
+  # Step 10: Calculate Clustering Coefficient and Global Efficiency
+  clustering_coefficient <- transitivity(network)
+  global_efficiency <- global_efficiency(network)
+
+  # Step 11: Calculate Labeled-to-NonLabeled Connections and Normalized Connections
+  labeled_to_nonlabeled <- labeled_to_nonlabeled_connections(network = network, coordinates = coordinates)
+  labeled_to_nonlabeled_normalized <- labeled_to_nonlabeled_connections_normalized(network = network, coordinates = coordinates)
 
   # Save plots as images using samplename
   ggplot2::ggsave(paste0(samplename, "_population_activity_plot.png"), plot = pop_activity_plot)
@@ -75,7 +66,7 @@ pipeline <- function(calcium_matrix, coordinates, dendrogram = FALSE, correlatio
   ggplot2::ggsave(paste0(samplename, "_pca_plot.png"), plot = pca_plot)
   ggplot2::ggsave(paste0(samplename, "_psd_plot.png"), plot = psd_plot)
 
-  # Return a list containing all results
+  # Return a list containing all results and features
   return(list(
     normalized_matrix = normalized_matrix,
     binarized_matrix = binarized_matrix,
@@ -84,6 +75,11 @@ pipeline <- function(calcium_matrix, coordinates, dendrogram = FALSE, correlatio
     network_plot = network_plot,
     degree_plot = degree_plot,
     pca_plot = pca_plot,
-    psd_plot = psd_plot
+    psd_plot = psd_plot,
+    top5pc_variance = top5pc_variance,
+    clustering_coefficient = clustering_coefficient,
+    global_efficiency = global_efficiency,
+    labeled_to_nonlabeled_connections = labeled_to_nonlabeled,
+    labeled_to_nonlabeled_connections_normalized = labeled_to_nonlabeled_normalized
   ))
 }

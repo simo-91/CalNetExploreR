@@ -17,7 +17,7 @@
 pca <- function(calcium_matrix, binarize = TRUE, plot = TRUE) {
   # Binarize the calcium matrix if requested
   if (binarize) {
-    calcium_matrix <- binarize(calcium_matrix)
+    calcium_matrix <- binarize(normalize(calcium_matrix))
   }
 
   # Perform PCA using the stats package
