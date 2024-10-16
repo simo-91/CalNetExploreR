@@ -7,6 +7,7 @@
 #' @param plot A logical value indicating whether to generate and return the degree histogram plot. Defaults to TRUE.
 #' @return If `plot` is TRUE, a ggplot object representing the degree histogram. If `plot` is FALSE, a numeric value representing the mean degree.
 #' @examples
+#' binarized_calcium_matrix <- matrix(runif(100, 0, 1), nrow = 10, ncol = 10)
 #' graph <- make_network(binarized_calcium_matrix)
 #' result <- degree_analysis(graph, plot = TRUE)
 #' @export

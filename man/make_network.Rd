@@ -7,7 +7,8 @@
 make_network(
   binarized_calcium_matrix,
   lag.max = 1,
-  correlation_threshold = "none"
+  correlation_threshold = "none",
+  save_cmat = FALSE
 )
 }
 \arguments{
@@ -16,9 +17,11 @@ make_network(
 \item{lag.max}{The maximum lag to use in the cross-correlation function (CCF). Defaults to 1.}
 
 \item{correlation_threshold}{The threshold value for filtering edges in the network (Pearson's coefficients go from -1 to +1). Set to "none" to disable filtering. Defaults to "none".}
+
+\item{save_cmat}{A logical indicating whether to return the correlation matrix along with the network. Defaults to FALSE.}
 }
 \value{
-An `igraph` object representing the network of correlated cells.
+If `save_cmat = TRUE`, returns a list with the `igraph` object and the correlation matrix. If `save_cmat = FALSE`, returns just the `igraph` object.
 }
 \description{
 This function produces a network based on the maximum cross-correlation between cells' calcium activity.

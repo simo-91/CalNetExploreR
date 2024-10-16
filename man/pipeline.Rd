@@ -9,7 +9,10 @@ pipeline(
   coordinates,
   dendrogram = FALSE,
   correlation_threshold = 0.3,
-  frame_rate = 0.5
+  frame_rate = 0.5,
+  lag.max = 1,
+  big_community_min_members = 5,
+  samplename = "sample"
 )
 }
 \arguments{
@@ -22,27 +25,18 @@ pipeline(
 \item{correlation_threshold}{A numeric value specifying the threshold for filtering edges by weight in the network analysis. Set to "none" to disable filtering. Defaults to 0.3.}
 
 \item{frame_rate}{A numeric value specifying the frame rate (in Hz) for the PSD analysis. Defaults to 0.5.}
+
+\item{lag.max}{A numeric value specifying the lag to be used in the network creation step. Defaults to 1.}
+
+\item{big_community_min_members}{An integer specifying the minimum number of members for a community to be considered "big." Defaults to 5.}
+
+\item{samplename}{A character string specifying the name of the sample. Used to name saved plot images.}
 }
 \value{
-A list containing the results of each analysis step, including plots.
-\itemize{
-  \item \code{normalized_matrix}: The normalized calcium matrix.
-  \item \code{binarized_matrix}: The binarized calcium matrix.
-  \item \code{population_activity_plot}: The population activity plot.
-  \item \code{network}: The network object created from the binarized matrix.
-  \item \code{network_plot}: The plot of the network graph.
-  \item \code{degree_plot}: The degree distribution plot of the network.
-  \item \code{pca_plot}: The scree plot from PCA analysis.
-  \item \code{psd_plot}: The power spectral density (PSD) plot.
-}
+A list containing the results of each analysis step, including plots and calculated features.
 }
 \description{
 This function runs a comprehensive analysis pipeline on calcium imaging data, including normalization, binarization,
 population activity plotting, network creation and plotting, PCA analysis, power spectral density (PSD) analysis,
-and degree distribution analysis. The function requires the user to provide coordinates for the cells.
-}
-\examples{
-calcium_matrix <- matrix(runif(1000), nrow = 10)
-coordinates <- data.frame(X = runif(10), Y = runif(10), Cell = 1:10)
-results <- pipeline(calcium_matrix, coordinates = coordinates)
+degree distribution analysis, and various network metrics calculations (e.g., clustering coefficient, global efficiency).
 }

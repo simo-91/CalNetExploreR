@@ -19,6 +19,7 @@ This function calculates the degree of each node in the network, generates a his
 and returns either the plot or the mean degree based on the `plot` argument.
 }
 \examples{
+binarized_calcium_matrix <- matrix(runif(100, 0, 1), nrow = 10, ncol = 10)
 graph <- make_network(binarized_calcium_matrix)
 result <- degree_analysis(graph, plot = TRUE)
 }
