@@ -4,18 +4,21 @@
 #' population activity plotting, network creation and plotting, PCA analysis, power spectral density (PSD) analysis,
 #' degree distribution analysis, and various network metrics calculations (e.g., clustering coefficient, global efficiency, and event frequency).
 #'
+#' **Note:** In the network plotting step, nodes are labeled with the community numbers they belong to by setting `cell_ID = "communities"` in the `plot_network()` function. This enhances the visualization of community structures within the network.
+#'
 #' @param calcium_matrix A matrix where each row represents a cell and each column represents a timepoint.
 #' @param coordinates A data frame containing X and Y coordinates for each cell. Must include columns "X", "Y", "Cell", and "Label".
-#' @param dendrogram A logical value indicating whether to include a dendrogram in the population activity plot. Defaults to FALSE.
-#' @param correlation_threshold A numeric value specifying the threshold for filtering edges by weight in the network analysis. Set to "none" to disable filtering. Defaults to 0.3.
-#' @param frame_rate A numeric value specifying the frame rate (in Hz) for the PSD analysis and event frequency calculation. Defaults to 0.5.
-#' @param lag.max A numeric value specifying the lag to be used in the network creation step. Defaults to 1.
-#' @param big_community_min_members An integer specifying the minimum number of members for a community to be considered "big." Defaults to 5.
+#' @param dendrogram A logical value indicating whether to include a dendrogram in the population activity plot. Defaults to `FALSE`.
+#' @param correlation_threshold A numeric value specifying the threshold for filtering edges by weight in the network analysis. Set to `"none"` to disable filtering. Defaults to `0.3`.
+#' @param frame_rate A numeric value specifying the frame rate (in Hz) for the PSD analysis and event frequency calculation. Defaults to `0.5`.
+#' @param lag.max A numeric value specifying the lag to be used in the network creation step. Defaults to `1`.
+#' @param big_community_min_members An integer specifying the minimum number of members for a community to be considered "big." Defaults to `5`.
 #' @param samplename A character string specifying the name of the sample. Used to name saved plot images.
 #' @return A list containing the results of each analysis step, including plots and calculated features.
 #' @export
 #' @importFrom ggplot2 ggsave
-pipeline <- function(calcium_matrix, coordinates, dendrogram = FALSE, correlation_threshold = 0.3, frame_rate = 0.5, lag.max = 1, big_community_min_members = 5, samplename = "sample") {
+pipeline <- function(calcium_matrix, coordinates, dendrogram = FALSE, correlation_threshold = 0.3,
+                     frame_rate = 0.5, lag.max = 1, big_community_min_members = 5, samplename = "sample") {
 
   # Ensure coordinates are provided and valid
   if (is.null(coordinates) || !all(c("X", "Y", "Cell", "Label") %in% colnames(coordinates))) {
@@ -35,7 +38,8 @@ pipeline <- function(calcium_matrix, coordinates, dendrogram = FALSE, correlatio
   network <- make_network(binarized_matrix, lag.max = lag.max, correlation_threshold = correlation_threshold)
 
   # Step 5: Network Plotting
-  network_plot <- plot_network(graph = network, coordinates = coordinates, label = "communities", correlation_threshold = correlation_threshold)
+  network_plot <- plot_network(graph = network, coordinates = coordinates, label = "communities",
+                               cell_ID = "communities", correlation_threshold = correlation_threshold)
 
   # Step 6: Degree Distribution Analysis
   degree_plot <- degrees(graph = network, plot = TRUE)
@@ -55,8 +59,8 @@ pipeline <- function(calcium_matrix, coordinates, dendrogram = FALSE, correlatio
   clustering_coefficient <- transitivity(network)
   global_efficiency <- global_efficiency(network)
 
-  # Step 11: Calculate Labeled-to-NonLabeled Connections using subset_connections()
-  # First, obtain the correlation matrix used in network creation
+  # Step 11: Calculate Labeled-to-Unlabeled Connections using subset_connections()
+  # Obtain the correlation matrix used in network creation
   correlation_matrix <- as_adjacency_matrix(network, attr = "weight", sparse = FALSE)
 
   # Use the subset_connections function
