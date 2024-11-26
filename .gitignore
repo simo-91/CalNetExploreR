@@ -4,4 +4,7 @@
 .Ruserdata
 .DS_Store
 CalNetExploreR.Rproj
-renv
+renv/library/
+renv/staging/
+!renv.lock
+!renv/settings.dcf
