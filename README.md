@@ -121,6 +121,8 @@ print(psd_plot)
 events_per_min_results <- events_per_min(calcium_matrix = results$binarized_matrix)
 print(events_per_min_results)
 ```
+
+
 ## Main Features
 
 **CalNetExploreR** provides a comprehensive suite of tools for analyzing calcium imaging data and exploring neuronal networks. The main features include:
