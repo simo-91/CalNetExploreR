@@ -31,7 +31,7 @@ Here is the list of dependencies:
 
 To ensure all dependencies are installed, you can run the following command:
 
-`install.packages(c("ggplot2", "reshape2", "ggdendro", "cowplot", "ggpubr",                     "grid", "ggraph", "igraph", "factoextra", "dplyr", "RColorBrewer", "readr"))`
+`install.packages(c("ggplot2", "reshape2", "ggdendro", "cowplot", "ggpubr", "grid", "ggraph", "igraph", "factoextra", "dplyr", "RColorBrewer", "readr"))`
 
 ## Install CalNetExploreR from GitHub
 
@@ -75,6 +75,24 @@ library(CalNetExploreR)
     
 calcium_matrix <- matrix(runif(1000), nrow = 10)  
 coordinates <- data.frame(X = runif(10), Y = runif(10), Cell = 1:10)
+
+# Run the full analysis pipeline
+results <- pipeline(
+  calcium_matrix = calcium_matrix,
+  coordinates = coordinates,
+  dendrogram = TRUE,
+  correlation_threshold = 0.3,
+  frame_rate = 0.5,
+  lag.max = 1,
+  big_community_min_members = 5,
+  samplename = "example_sample"
+)
+
+# Access the results
+print(results$population_activity_plot)  # View population activity plot
+print(results$network_plot)             # View network plot
+print(results$degree_plot)              # View degree distribution plot
+
 
 # Population Activity Plot with a dendrogram
 population_plot <- population_activity(binarized_calcium_matrix = results$binarized_matrix, binarize = FALSE, dendrogram = TRUE)
