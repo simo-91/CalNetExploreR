@@ -4,13 +4,13 @@
 
 ## Installation
 
-You can install the development version of CalNetExploreR from GitHub using the following commands:
+You can install the development version of CalciumNetExploreR from GitHub using the following commands:
 
 Install devtools if you haven't already:
 
 `install.packages("devtools")`
 
-The `CalciumNetExploreR` package relies on several R packages for its functionality. Make sure to install these dependencies before using `CalNetExploreR`. You can install these packages using the command `install.packages("package_name")`.
+The `CalciumNetExploreR` package relies on several R packages for its functionality. Make sure to install these dependencies before using `CalciumNetExploreR`. You can install these packages using the command `install.packages("package_name")`.
 
 Here is the list of dependencies:
 
