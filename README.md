@@ -121,53 +121,53 @@ print(psd_plot)
 events_per_min_results <- events_per_min(calcium_matrix = results$binarized_matrix)
 print(events_per_min_results)
 ```
-
 ## Main Features
 
 **CalNetExploreR** provides a comprehensive suite of tools for analyzing calcium imaging data and exploring neuronal networks. The main features include:
 
-### Normalization (`normalize.R`)
+**Normalization (`normalize.R`)**
 - Standardize calcium imaging data to a common scale for consistent analysis across cells and experiments.
 
-### Binarization (`binarize.R`)
+**Binarization (`binarize.R`)**
 - Convert normalized data to binary states to facilitate activity analysis by distinguishing active from inactive states.
 
-### Population Activity Analysis and Visualization (`population_activity.R`, `coactive_cells.R`, `active_cells_percentage.R`)
+**Population Activity Analysis and Visualization (`population_activity.R`, `coactive_cells.R`, `active_cells_percentage.R`)**
 - **Hierarchical Clustering and Heatmaps**: Sort and display cell activity over time using hierarchical clustering, with optional dendrogram visualization.
 - **Coactive Cells Identification**: Calculate the percentage of coactive cells at each time point to assess synchronous activity across the population.
 - **Active Cells Percentage Calculation**: Compute the percentage of active cells over time to analyze overall population dynamics.
 
-### Event Frequency Analysis (`events_per_min.R`)
+**Event Frequency Analysis (`events_per_min.R`)**
 - Calculate the frequency of events per minute for each cell, providing insights into individual cellular activity levels.
 
-### Network Construction and Visualization (`make_network.R`, `plot_network.R`)
+**Network Construction and Visualization (`make_network.R`, `plot_network.R`)**
 - **Network Creation**: Generate a network of cell interactions based on cross-correlation and specified lag times to infer functional connectivity.
 - **Network Visualization**: Visualize the network structure using graph plotting functions to understand connectivity patterns and community structures.
 
-### Network Feature Extraction (`network_features.R`, `degrees.R`)
+**Network Feature Extraction (`network_features.R`, `degrees.R`)**
 - **Graph Theoretical Measures**: Analyze network properties such as degree distribution, clustering coefficients, path lengths, and modularity to characterize the network's topology.
 - **Degree Distribution Analysis**: Examine the distribution of connections per node (cell) to identify hubs and network hierarchy.
 
-### Principal Component Analysis (PCA) (`pca.R`, `get_top5pc_variance.R`)
+**Principal Component Analysis (PCA) (`pca.R`, `get_top5pc_variance.R`)**
 - **Dimensionality Reduction**: Perform PCA to reduce data dimensionality and identify principal components that capture the most variance.
 - **Variance Analysis**: Extract and visualize the variance explained by the top principal components using scree plots to aid in component selection.
 
-### Power Spectral Density (PSD) Analysis (`PSD.R`, `PSD.plt.R`)
+**Power Spectral Density (PSD) Analysis (`PSD.R`, `PSD.plt.R`)**
 - **Frequency Analysis**: Conduct PSD analysis on calcium signals to examine the spectral content and identify dominant frequencies in the data.
 - **PSD Plotting**: Generate plots of the power spectral density to visualize frequency components.
 
-### Subset Extraction and Analysis (`get_subset.R`, `subset_connections.R`)
+**Subset Extraction and Analysis (`get_subset.R`, `subset_connections.R`)**
 - **Data Subsetting**: Extract subsets of data based on specific criteria (e.g., cell types, regions) for focused analysis.
 - **Connection Subsetting**: Filter network connections to analyze specific interactions or sub-networks of interest.
 
-### Analysis of Labeled to Unlabeled Connections (`labeled_to_nonlabeled_connections.R`, `labeled_to_nonlabeled_connections_normalized.R`)
+**Analysis of Labeled to Unlabeled Connections (`labeled_to_nonlabeled_connections.R`, `labeled_to_nonlabeled_connections_normalized.R`)**
 - Analyze and quantify the connections between labeled (e.g., genetically or chemically tagged) and unlabeled cells within the network, both in raw counts and normalized forms.
 
-### Degree-Based Subsetting (`degrees.R`)
+**Degree-Based Subsetting (`degrees.R`)**
 - Identify cells with specific degree properties (e.g., high-degree hubs) for targeted analysis of their roles within the network.
 
-### Full Analysis Pipeline Execution (`full_pipeline.R`)
+**Full Analysis Pipeline Execution (`full_pipeline.R`)**
 - Execute the entire analysis workflow with a single function, streamlining the process from raw data to results, including normalization, binarization, network construction, and feature extraction.
+
 
 For more information, please refer to the manual (CalNetExploreR.pdf)
 
