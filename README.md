@@ -126,12 +126,12 @@ print(events_per_min_results)
 
 CalNetExploreR offers the following functionalities:
 
--   Normalization: Standardize calcium imaging data to a common scale.
--   Binarization: Convert normalized data to binary states for activity analysis.
--   Population Activity Plotting: Hierarchical clustering to sort and display cell activity over time with optional dendrogram clustering + percentage of coactive cells
--   Network Analysis: Create and visualize a network of cell interactions based on cross-correlation and lag.
--   Principal Component Analysis (PCA): Analyze data variance and display scree plots of eigenvalues.
--   Power Spectral Density (PSD) Analysis: Perform frequency analysis on calcium signals. Degree Distribution Analysis: Analyze the degree distribution of nodes within the network.
+-   **Normalization**: Standardize calcium imaging data to a common scale.
+-   **Binarization**: Convert normalized data to binary states for activity analysis.
+-   **Population Activity Plotting**: Hierarchical clustering to sort and display cell activity over time with optional dendrogram clustering + percentage of coactive cells
+-   **Network Analysis**: Create and visualize a network of cell interactions based on cross-correlation and lag.
+-   **Principal Component Analysis (PCA)**: Analyze data variance and display scree plots of eigenvalues.
+-   **Power Spectral Density (PSD) Analysis**: Perform frequency analysis on calcium signals. Degree Distribution Analysis: Analyze the degree distribution of nodes within the network.
 
 For more information, please refer to the manual (CalNetExploreR.pdf)
 
