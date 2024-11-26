@@ -6,5 +6,6 @@
 CalNetExploreR.Rproj
 renv/library/
 renv/staging/
+renv/.gitignore
 !renv.lock
 !renv/settings.dcf
