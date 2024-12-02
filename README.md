@@ -39,6 +39,8 @@ To ensure all dependencies are installed, you can run the following command:
 
 ## Usage
 
+![](CNER_method.png)
+
 To use the main functions you need a matrix containing your timeseries data. Every row should be a different cell/timeseries and it should looks something like this:
 
 | Timepoint n~0~ | Timepoint 2 | Timepoint 3 | ... | Timepoint n~max~ |

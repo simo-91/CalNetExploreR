@@ -4,7 +4,7 @@
 #' population activity plotting, network creation and plotting, PCA analysis, power spectral density (PSD) analysis,
 #' degree distribution analysis, and various network metrics calculations (e.g., clustering coefficient, global efficiency, and event frequency).
 #'
-#' **Note:** In the network plotting step, nodes are labeled with the community numbers they belong to by setting `cell_ID = "communities"` in the `plot_network()` function. This enhances the visualization of community structures within the network.
+#' **Note:** In the network plotting step, nodes are labeled with the community numbers they belong to by setting `cell_ID = "communities"` in the `plot_network()` function. This facilitates the visualization of community structures within the network.
 #'
 #' @param calcium_matrix A matrix where each row represents a cell and each column represents a timepoint.
 #' @param coordinates A data frame containing X and Y coordinates for each cell. Must include columns "X", "Y", "Cell", and "Label".
@@ -32,7 +32,7 @@ pipeline <- function(calcium_matrix, coordinates, dendrogram = FALSE, correlatio
   binarized_matrix <- binarize(normalized_matrix)
 
   # Step 3: Population Activity Plotting
-  pop_activity_plot <- population_activity.plt(binarized_matrix, binarize = FALSE, dendrogram = dendrogram)
+  pop_activity_plot <- population_activity(binarized_matrix, binarize = FALSE, dendrogram = dendrogram)
 
   # Step 4: Network Creation
   network <- make_network(binarized_matrix, lag.max = lag.max, correlation_threshold = correlation_threshold)
