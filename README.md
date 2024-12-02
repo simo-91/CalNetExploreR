@@ -43,7 +43,7 @@ To ensure all dependencies are installed, you can run the following command:
 
 To use the main functions you need a matrix containing your timeseries data. Every row should be a different cell/timeseries and it should looks something like this:
 
-| Timepoint n~0~ | Timepoint 2 | Timepoint 3 | ... | Timepoint n~max~ |
+| Timepoint n0 | Timepoint 2 | Timepoint 3 | ... | Timepoint nmax |
 |:--------------:|:-----------:|:-----------:|:---:|:----------------:|
 |      0.12      |    0.23     |    0.35     | ... |       0.31       |
 |      0.11      |    0.19     |    0.22     | ... |       0.40       |
