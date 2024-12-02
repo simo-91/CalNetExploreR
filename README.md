@@ -4,13 +4,13 @@
 
 ## Installation
 
-You can install the development version of CalNetExploreR from GitHub using the following commands:
+You can install the development version of CalciumNetExploreR from GitHub using the following commands:
 
 Install devtools if you haven't already:
 
 `install.packages("devtools")`
 
-The `CalciumNetExploreR` package relies on several R packages for its functionality. Make sure to install these dependencies before using `CalNetExploreR`. You can install these packages using the command `install.packages("package_name")`.
+The `CalciumNetExploreR` package relies on several R packages for its functionality. Make sure to install these dependencies before using `CalciumNetExploreR`. You can install these packages using the command `install.packages("package_name")`.
 
 Here is the list of dependencies:
 
@@ -31,7 +31,7 @@ Here is the list of dependencies:
 
 To ensure all dependencies are installed, you can run the following command:
 
-`install.packages(c("ggplot2", "reshape2", "ggdendro", "cowplot", "ggpubr",                     "grid", "ggraph", "igraph", "factoextra", "dplyr", "RColorBrewer", "readr"))`
+`install.packages(c("ggplot2", "reshape2", "ggdendro", "cowplot", "ggpubr", "grid", "ggraph", "igraph", "factoextra", "dplyr", "RColorBrewer", "readr"))`
 
 ## Install CalNetExploreR from GitHub
 
@@ -78,6 +78,24 @@ library(CalNetExploreR)
 calcium_matrix <- matrix(runif(1000), nrow = 10)  
 coordinates <- data.frame(X = runif(10), Y = runif(10), Cell = 1:10)
 
+# Run the full analysis pipeline
+results <- pipeline(
+  calcium_matrix = calcium_matrix,
+  coordinates = coordinates,
+  dendrogram = TRUE,
+  correlation_threshold = 0.3,
+  frame_rate = 0.5,
+  lag.max = 1,
+  big_community_min_members = 5,
+  samplename = "example_sample"
+)
+
+# Access the results
+print(results$population_activity_plot)  # View population activity plot
+print(results$network_plot)             # View network plot
+print(results$degree_plot)              # View degree distribution plot
+
+
 # Population Activity Plot with a dendrogram
 population_plot <- population_activity(binarized_calcium_matrix = results$binarized_matrix, binarize = FALSE, dendrogram = TRUE)
 print(population_plot)
@@ -106,16 +124,54 @@ events_per_min_results <- events_per_min(calcium_matrix = results$binarized_matr
 print(events_per_min_results)
 ```
 
+
 ## Main Features
 
-CalNetExploreR offers the following functionalities:
+**CalNetExploreR** provides a comprehensive suite of tools for analyzing calcium imaging data and exploring neuronal networks. The main features include:
 
--   Normalization: Standardize calcium imaging data to a common scale.
--   Binarization: Convert normalized data to binary states for activity analysis.
--   Population Activity Plotting: Hierarchical clustering to sort and display cell activity over time with optional dendrogram clustering + percentage of coactive cells
--   Network Analysis: Create and visualize a network of cell interactions based on cross-correlation and lag.
--   Principal Component Analysis (PCA): Analyze data variance and display scree plots of eigenvalues.
--   Power Spectral Density (PSD) Analysis: Perform frequency analysis on calcium signals. Degree Distribution Analysis: Analyze the degree distribution of nodes within the network.
+**Normalization (`normalize.R`)**
+- Standardize calcium imaging data to a common scale for consistent analysis across cells and experiments.
+
+**Binarization (`binarize.R`)**
+- Convert normalized data to binary states to facilitate activity analysis by distinguishing active from inactive states.
+
+**Population Activity Analysis and Visualization (`population_activity.R`, `coactive_cells.R`, `active_cells_percentage.R`)**
+- **Hierarchical Clustering and Heatmaps**: Sort and display cell activity over time using hierarchical clustering, with optional dendrogram visualization.
+- **Coactive Cells Identification**: Calculate the percentage of coactive cells at each time point to assess synchronous activity across the population.
+- **Active Cells Percentage Calculation**: Compute the percentage of active cells over time to analyze overall population dynamics.
+
+**Event Frequency Analysis (`events_per_min.R`)**
+- Calculate the frequency of events per minute for each cell, providing insights into individual cellular activity levels.
+
+**Network Construction and Visualization (`make_network.R`, `plot_network.R`)**
+- **Network Creation**: Generate a network of cell interactions based on cross-correlation and specified lag times to infer functional connectivity.
+- **Network Visualization**: Visualize the network structure using graph plotting functions to understand connectivity patterns and community structures.
+
+**Network Feature Extraction (`network_features.R`, `degrees.R`)**
+- **Graph Theoretical Measures**: Analyze network properties such as degree distribution, clustering coefficients, path lengths, and modularity to characterize the network's topology.
+- **Degree Distribution Analysis**: Examine the distribution of connections per node (cell) to identify hubs and network hierarchy.
+
+**Principal Component Analysis (PCA) (`pca.R`, `get_top5pc_variance.R`)**
+- **Dimensionality Reduction**: Perform PCA to reduce data dimensionality and identify principal components that capture the most variance.
+- **Variance Analysis**: Extract and visualize the variance explained by the top principal components using scree plots to aid in component selection.
+
+**Power Spectral Density (PSD) Analysis (`PSD.R`, `PSD.plt.R`)**
+- **Frequency Analysis**: Conduct PSD analysis on calcium signals to examine the spectral content and identify dominant frequencies in the data.
+- **PSD Plotting**: Generate plots of the power spectral density to visualize frequency components.
+
+**Subset Extraction and Analysis (`get_subset.R`, `subset_connections.R`)**
+- **Data Subsetting**: Extract subsets of data based on specific criteria (e.g., cell types, regions) for focused analysis.
+- **Connection Subsetting**: Filter network connections to analyze specific interactions or sub-networks of interest.
+
+**Analysis of Labeled to Unlabeled Connections (`labeled_to_nonlabeled_connections.R`, `labeled_to_nonlabeled_connections_normalized.R`)**
+- Analyze and quantify the connections between labeled (e.g., genetically or chemically tagged) and unlabeled cells within the network, both in raw counts and normalized forms.
+
+**Degree-Based Subsetting (`degrees.R`)**
+- Identify cells with specific degree properties (e.g., high-degree hubs) for targeted analysis of their roles within the network.
+
+**Full Analysis Pipeline Execution (`full_pipeline.R`)**
+- Execute the entire analysis workflow with a single function, streamlining the process from raw data to results, including normalization, binarization, network construction, and feature extraction.
+
 
 For more information, please refer to the manual (CalNetExploreR.pdf)
 
