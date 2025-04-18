@@ -14,11 +14,15 @@
 #' @param lag.max A numeric value specifying the lag to be used in the network creation step. Defaults to `1`.
 #' @param big_community_min_members An integer specifying the minimum number of members for a community to be considered "big." Defaults to `5`.
 #' @param samplename A character string specifying the name of the sample. Used to name saved plot images.
+#' @param clustering_method A character string specifying the hierarchical clustering method for population activity plotting.
+#'        Options: "ward.D", "ward.D2", "single", "complete", "average", "mcquitty", "median", "centroid". Defaults to "ward.D2".
+#'
 #' @return A list containing the results of each analysis step, including plots and calculated features.
 #' @export
 #' @importFrom ggplot2 ggsave
 pipeline <- function(calcium_matrix, coordinates, dendrogram = FALSE, correlation_threshold = 0.3,
-                     frame_rate = 0.5, lag.max = 1, big_community_min_members = 5, samplename = "sample") {
+                     frame_rate = 0.5, lag.max = 1, big_community_min_members = 5,
+                     samplename = "sample", clustering_method = "ward.D2") {
 
   # Ensure coordinates are provided and valid
   if (is.null(coordinates) || !all(c("X", "Y", "Cell", "Label") %in% colnames(coordinates))) {
@@ -32,7 +36,10 @@ pipeline <- function(calcium_matrix, coordinates, dendrogram = FALSE, correlatio
   binarized_matrix <- binarize(normalized_matrix)
 
   # Step 3: Population Activity Plotting
-  pop_activity_plot <- population_activity(binarized_matrix, binarize = FALSE, dendrogram = dendrogram)
+  pop_activity_plot <- population_activity(binarized_matrix,
+                                           binarize = FALSE,
+                                           dendrogram = dendrogram,
+                                           clustering_method = clustering_method)
 
   # Step 4: Network Creation
   network <- make_network(binarized_matrix, lag.max = lag.max, correlation_threshold = correlation_threshold)
@@ -59,14 +66,10 @@ pipeline <- function(calcium_matrix, coordinates, dendrogram = FALSE, correlatio
   clustering_coefficient <- transitivity(network)
   global_efficiency <- global_efficiency(network)
 
-  # Step 11: Calculate Labeled-to-Unlabeled Connections using subset_connections()
-  # Obtain the correlation matrix used in network creation
+  # Step 11: Calculate Labeled-to-Unlabeled Connections
   correlation_matrix <- as_adjacency_matrix(network, attr = "weight", sparse = FALSE)
-
-  # Use the subset_connections function
   subset_conn_results <- subset_connections(correlation_matrix, coordinates, correlation_threshold = correlation_threshold)
 
-  # Extract the required metrics
   total_connections_labeled_to_unlabeled <- subset_conn_results$total_connections_labeled_to_unlabeled
   total_possible_connections_labeled_to_unlabeled <- subset_conn_results$total_possible_connections_labeled_to_unlabeled
   proportion_labeled_to_unlabeled <- subset_conn_results$proportion_labeled_to_unlabeled
@@ -86,7 +89,7 @@ pipeline <- function(calcium_matrix, coordinates, dendrogram = FALSE, correlatio
   ggplot2::ggsave(paste0(samplename, "_pca_plot.png"), plot = pca_plot)
   ggplot2::ggsave(paste0(samplename, "_psd_plot.png"), plot = psd_plot)
 
-  # Return a list containing all results and features
+  # Return results
   return(list(
     normalized_matrix = normalized_matrix,
     binarized_matrix = binarized_matrix,
