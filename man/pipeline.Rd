@@ -18,17 +18,17 @@ pipeline(
 \arguments{
 \item{calcium_matrix}{A matrix where each row represents a cell and each column represents a timepoint.}
 
-\item{coordinates}{A data frame containing X and Y coordinates for each cell. Must include columns "X", "Y", and "Cell".}
+\item{coordinates}{A data frame containing X and Y coordinates for each cell. Must include columns "X", "Y", "Cell", and "Label".}
 
-\item{dendrogram}{A logical value indicating whether to include a dendrogram in the population activity plot. Defaults to FALSE.}
+\item{dendrogram}{A logical value indicating whether to include a dendrogram in the population activity plot. Defaults to `FALSE`.}
 
-\item{correlation_threshold}{A numeric value specifying the threshold for filtering edges by weight in the network analysis. Set to "none" to disable filtering. Defaults to 0.3.}
+\item{correlation_threshold}{A numeric value specifying the threshold for filtering edges by weight in the network analysis. Set to `"none"` to disable filtering. Defaults to `0.3`.}
 
-\item{frame_rate}{A numeric value specifying the frame rate (in Hz) for the PSD analysis. Defaults to 0.5.}
+\item{frame_rate}{A numeric value specifying the frame rate (in Hz) for the PSD analysis and event frequency calculation. Defaults to `0.5`.}
 
-\item{lag.max}{A numeric value specifying the lag to be used in the network creation step. Defaults to 1.}
+\item{lag.max}{A numeric value specifying the lag to be used in the network creation step. Defaults to `1`.}
 
-\item{big_community_min_members}{An integer specifying the minimum number of members for a community to be considered "big." Defaults to 5.}
+\item{big_community_min_members}{An integer specifying the minimum number of members for a community to be considered "big." Defaults to `5`.}
 
 \item{samplename}{A character string specifying the name of the sample. Used to name saved plot images.}
 }
@@ -38,5 +38,8 @@ A list containing the results of each analysis step, including plots and calcula
 \description{
 This function runs a comprehensive analysis pipeline on calcium imaging data, including normalization, binarization,
 population activity plotting, network creation and plotting, PCA analysis, power spectral density (PSD) analysis,
-degree distribution analysis, and various network metrics calculations (e.g., clustering coefficient, global efficiency).
+degree distribution analysis, and various network metrics calculations (e.g., clustering coefficient, global efficiency, and event frequency).
+}
+\details{
+**Note:** In the network plotting step, nodes are labeled with the community numbers they belong to by setting `cell_ID = "communities"` in the `plot_network()` function. This facilitates the visualization of community structures within the network.
 }

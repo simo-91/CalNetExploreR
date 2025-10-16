@@ -44,14 +44,14 @@ To ensure all dependencies are installed, you can run the following command:
 To use the main functions you need a matrix containing your timeseries data. Every row should be a different cell/timeseries and it should looks something like this:
 
 | Timepoint n0 | Timepoint 2 | Timepoint 3 | ... | Timepoint nmax |
-|:--------------:|:-----------:|:-----------:|:---:|:----------------:|
-|      0.12      |    0.23     |    0.35     | ... |       0.31       |
-|      0.11      |    0.19     |    0.22     | ... |       0.40       |
-|      0.09      |    0.15     |    0.18     | ... |       0.42       |
-|      0.14      |    0.21     |    0.30     | ... |       0.37       |
-|      0.13      |    0.20     |    0.25     | ... |       0.43       |
-|      0.08      |    0.12     |    0.16     | ... |       0.39       |
-|      0.10      |    0.18     |    0.23     | ... |       0.40       |
+|:------------:|:-----------:|:-----------:|:---:|:--------------:|
+|     0.12     |    0.23     |    0.35     | ... |      0.31      |
+|     0.11     |    0.19     |    0.22     | ... |      0.40      |
+|     0.09     |    0.15     |    0.18     | ... |      0.42      |
+|     0.14     |    0.21     |    0.30     | ... |      0.37      |
+|     0.13     |    0.20     |    0.25     | ... |      0.43      |
+|     0.08     |    0.12     |    0.16     | ... |      0.39      |
+|     0.10     |    0.18     |    0.23     | ... |      0.40      |
 
 Some of the functions require cell coordinates (X and Y) stored in a matrix. This should have X, Y and Cell ID columns, e.g.:
 

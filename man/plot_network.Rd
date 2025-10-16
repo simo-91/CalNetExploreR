@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_network.R
 \name{plot_network}
 \alias{plot_network}
-\title{Plot a Network Graph from Calcium Data}
+\title{Plot a Network Graph from Calcium Imaging Data}
 \usage{
 plot_network(
   graph,
@@ -15,19 +15,19 @@ plot_network(
 )
 }
 \arguments{
-\item{graph}{An igraph object representing the network. Can be created with `make_network()`.}
+\item{graph}{An igraph object representing the network. Can be created with \code{make_network()}.}
 
-\item{coordinates}{A data frame containing X and Y coordinates for each cell ID. Must include columns "X", "Y", and "Cell".}
+\item{coordinates}{A data frame containing X and Y coordinates for each cell. Must include columns \code{"X"}, \code{"Y"}, and \code{"Cell"}.}
 
-\item{label}{A character string indicating what to label the cells with. Options are "communities" or "frequency". Defaults to "communities".}
+\item{label}{A character string indicating how to color-code the nodes. Options are \code{"communities"} or \code{"frequency"}. Defaults to \code{"communities"}.}
 
-\item{cell_ID}{A dataframe of cell IDs (should contain X and Y columns). If set to "none", the nodes will be labeled with their numbers. Defaults to "none".}
+\item{cell_ID}{Either a character vector of labels for the nodes, or a special value to specify how to label the nodes. If set to \code{"none"}, the nodes will be labeled with their numbers. If set to \code{"communities"}, the nodes will be labeled with the community number they belong to. Defaults to \code{"none"}.}
 
-\item{reverse_y_scale}{A logical value indicating whether to reverse the Y scale in the plot (useful for matching image coordinates). Defaults to FALSE.}
+\item{reverse_y_scale}{A logical value indicating whether to reverse the Y scale in the plot (useful for matching image coordinates). Defaults to \code{FALSE}.}
 
-\item{frequency_values}{A numeric vector containing the frequency of events per minute for each cell. Required if `label = "frequency"`.}
+\item{frequency_values}{A numeric vector containing the frequency of events per minute for each cell. Required if \code{label = "frequency"}.}
 
-\item{correlation_threshold}{A numeric value specifying the threshold for filtering edges by weight. Set to "none" to disable filtering. Defaults to 0.3.}
+\item{correlation_threshold}{A numeric value specifying the threshold for filtering edges by weight. Set to \code{"none"} to disable filtering. Defaults to \code{0.3}.}
 }
 \value{
 A ggplot object representing the network graph.
@@ -51,5 +51,9 @@ frequency_values <- runif(10, 0, 5)
 
 # Plot the network graph with frequency as the label
 plot <- plot_network(graph, coordinates = posXY, label = "frequency", frequency_values = frequency_values)
+print(plot)
+
+# Plot the network graph with communities as labels inside nodes
+plot <- plot_network(graph, coordinates = posXY, label = "communities", cell_ID = "communities")
 print(plot)
 }
