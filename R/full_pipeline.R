@@ -104,12 +104,12 @@ pipeline <- function(calcium_matrix, coordinates, dendrogram = FALSE, correlatio
   top5pc_variance <- get_top5pc_variance(pca_result)
 
   # Step 10: Clustering Coefficient and Global Efficiency
-  clustering_coefficient <- transitivity(network)
-  global_efficiency <- global_efficiency(network)
+  clustering_coefficient <- igraph::transitivity(network)
+  global_efficiency <- igraph::global_efficiency(network)
 
   # Step 11: Calculate Labeled-to-Unlabeled Connections
   if (cell_labels) {
-    correlation_matrix <- as_adjacency_matrix(network, attr = "weight", sparse = FALSE)
+    correlation_matrix <- igraph::as_adjacency_matrix(network, attr = "weight", sparse = FALSE)
     subset_conn_results <- subset_connections(correlation_matrix, coordinates, correlation_threshold = correlation_threshold)
 
     total_connections_labeled_to_unlabeled <- subset_conn_results$total_connections_labeled_to_unlabeled
