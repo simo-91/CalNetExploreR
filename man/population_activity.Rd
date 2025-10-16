@@ -7,7 +7,8 @@
 population_activity(
   binarized_calcium_matrix,
   binarize = FALSE,
-  dendrogram = FALSE
+  dendrogram = FALSE,
+  clustering_method = "ward.D2"
 )
 }
 \arguments{
@@ -16,14 +17,14 @@ population_activity(
 \item{binarize}{A logical value indicating whether to binarize the calcium matrix. If TRUE, the matrix will be binarized using binarize(). Defaults to FALSE.}
 
 \item{dendrogram}{A logical value indicating whether to include the dendrogram plot. Defaults to FALSE.}
+
+\item{clustering_method}{A character string indicating the linkage method to be used in hierarchical clustering.
+Must be one of "ward.D", "ward.D2", "single", "complete", "average", "mcquitty", "median", or "centroid".
+Defaults to "ward.D2".}
 }
 \value{
 A combined plot showing the raster plot with hierarchical clustering and a line plot of population activity.
 }
 \description{
 Generates a raster plot and line plot after performing hierarchical clustering on the data to sort similar cells.
-}
-\examples{
-calcium_matrix <- matrix(runif(1000), nrow = 10)
-plot <- population_activity.plt(calcium_matrix, binarize = TRUE, dendrogram = TRUE)
 }

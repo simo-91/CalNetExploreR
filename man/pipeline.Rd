@@ -12,28 +12,59 @@ pipeline(
   frame_rate = 0.5,
   lag.max = 1,
   big_community_min_members = 5,
-  samplename = "sample"
+  samplename = "sample",
+  clustering_method = "ward.D2",
+  cell_labels = TRUE
 )
 }
 \arguments{
 \item{calcium_matrix}{A matrix where each row represents a cell and each column represents a timepoint.}
 
-\item{coordinates}{A data frame containing X and Y coordinates for each cell. Must include columns "X", "Y", "Cell", and "Label".}
+\item{coordinates}{A data frame containing spatial coordinates for each cell. Must include columns "X", "Y", and "Cell".
+If `cell_labels = TRUE`, must also include a "Label" column.}
 
-\item{dendrogram}{A logical value indicating whether to include a dendrogram in the population activity plot. Defaults to `FALSE`.}
+\item{dendrogram}{Logical. Whether to include a dendrogram in the population activity plot. Defaults to `FALSE`.}
 
-\item{correlation_threshold}{A numeric value specifying the threshold for filtering edges by weight in the network analysis. Set to `"none"` to disable filtering. Defaults to `0.3`.}
+\item{correlation_threshold}{Numeric. Threshold for filtering edges by weight in the network analysis.
+Set to `"none"` to disable filtering. Defaults to `0.3`.}
 
-\item{frame_rate}{A numeric value specifying the frame rate (in Hz) for the PSD analysis and event frequency calculation. Defaults to `0.5`.}
+\item{frame_rate}{Numeric. The frame rate (in Hz) for the PSD analysis and event frequency calculation. Defaults to `0.5`.}
 
-\item{lag.max}{A numeric value specifying the lag to be used in the network creation step. Defaults to `1`.}
+\item{lag.max}{Numeric. The maximum lag used in the network creation step. Defaults to `1`.}
 
-\item{big_community_min_members}{An integer specifying the minimum number of members for a community to be considered "big." Defaults to `5`.}
+\item{big_community_min_members}{Integer. Minimum number of members required for a community to be considered "big". Defaults to `5`.}
 
-\item{samplename}{A character string specifying the name of the sample. Used to name saved plot images.}
+\item{samplename}{Character string. The name of the sample, used to name saved plot image files.}
+
+\item{clustering_method}{Character string. The hierarchical clustering method to be used in the population activity plot.
+Options: "ward.D", "ward.D2", "single", "complete", "average", "mcquitty", "median", "centroid". Defaults to `"ward.D2"`.}
+
+\item{cell_labels}{Logical. Whether the `coordinates` data frame contains a "Label" column and whether label-based
+analysis (like labeled-to-unlabeled connection metrics) should be performed. Defaults to `TRUE`.}
 }
 \value{
-A list containing the results of each analysis step, including plots and calculated features.
+A named list containing all intermediate outputs and calculated metrics, including:
+\describe{
+  \item{normalized_matrix}{Normalized calcium activity matrix}
+  \item{binarized_matrix}{Binarized activity matrix}
+  \item{population_activity_plot}{ggplot object of population raster plot}
+  \item{network}{igraph object of the constructed network}
+  \item{network_plot}{ggplot object of the network plot}
+  \item{degree_plot}{ggplot object showing degree distribution}
+  \item{pca_plot}{ggplot object of PCA}
+  \item{psd_plot}{ggplot object of power spectral density plot}
+  \item{top5pc_variance}{Variance explained by the top 5 principal components}
+  \item{clustering_coefficient}{Network transitivity (clustering coefficient)}
+  \item{global_efficiency}{Global efficiency of the network}
+  \item{total_connections_labeled_to_unlabeled}{Number of edges from labeled to unlabeled cells (if `cell_labels = TRUE`)}
+  \item{total_possible_connections_labeled_to_unlabeled}{Possible such edges (denominator)}
+  \item{proportion_labeled_to_unlabeled}{Proportion of labeled-to-unlabeled connections}
+  \item{total_connections_labeled_to_labeled}{Edges between labeled cells}
+  \item{total_possible_connections_labeled_to_labeled}{Possible labeled-labeled connections}
+  \item{proportion_labeled_to_labeled}{Proportion of labeled-labeled connections}
+  \item{event_frequency_per_min}{Vector of per-cell event frequencies (events/min)}
+  \item{mean_event_frequency_per_min}{Average event frequency (events/min)}
+}
 }
 \description{
 This function runs a comprehensive analysis pipeline on calcium imaging data, including normalization, binarization,
@@ -41,5 +72,9 @@ population activity plotting, network creation and plotting, PCA analysis, power
 degree distribution analysis, and various network metrics calculations (e.g., clustering coefficient, global efficiency, and event frequency).
 }
 \details{
-**Note:** In the network plotting step, nodes are labeled with the community numbers they belong to by setting `cell_ID = "communities"` in the `plot_network()` function. This facilitates the visualization of community structures within the network.
+In the network plotting step, if `cell_labels = TRUE`, nodes are labeled with the community numbers they belong to by setting
+`cell_ID = "communities"` in the `plot_network()` function. This facilitates visualization of community structures within the network.
+
+If `cell_labels = FALSE`, the function skips all label-based calculations, including the check for the `Label` column in the `coordinates`
+data frame and the computation of labeled-to-unlabeled connections.
 }

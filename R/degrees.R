@@ -9,7 +9,7 @@
 #' @examples
 #' binarized_calcium_matrix <- matrix(runif(100, 0, 1), nrow = 10, ncol = 10)
 #' graph <- make_network(binarized_calcium_matrix)
-#' result <- degree_analysis(graph, plot = TRUE)
+#' result <- degrees(graph, plot = TRUE)
 #' @export
 #' @importFrom igraph degree
 #' @import ggplot2

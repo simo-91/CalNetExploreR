@@ -3,6 +3,7 @@
 export(PSD)
 export(PSD.plt)
 export(active_cells_percentage)
+export(baseline_correction)
 export(binarize)
 export(coactive_cells)
 export(degrees)
