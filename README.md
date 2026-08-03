@@ -1,6 +1,6 @@
 # CalciumNetExploreR
 
-**CalciumNetExploreR** is an R package designed for comprehensive calcium imaging data analysis, including normalization, binarization, network creation, and various advanced visualizations. The package provides an integrated pipeline to streamline the analysis of calcium imaging data from live imaging experiments.
+**CalciumNetExploreR** is an R package designed for comprehensive calcium imaging data analysis, including normalization, binarization, network creation, and various advanced visualizations. The package provides an integrated pipeline to streamline the analysis of calcium imaging data from live imaging experiments. The reference paper is at https://doi.org/10.1186/s12859-025-06206-0
 
 ## Installation
 
@@ -152,7 +152,7 @@ print(events_per_min_results)
 
 **Full Analysis Pipeline Execution (`full_pipeline`)** - Execute the entire analysis workflow with a single function, streamlining the process from raw data to results, including normalization, binarization, network construction, and feature extraction.
 
-For more information, please refer to the manual (CalNetExploreR.pdf)
+For more information, please refer to the manual (CalNetExploreR.pdf) and its reference paper: https://doi.org/10.1186/s12859-025-06206-0
 
 ## License
 
