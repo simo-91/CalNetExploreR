@@ -12,21 +12,6 @@ Install devtools if you haven't already:
 
 The `CalciumNetExploreR` package relies on several R packages for its functionality. Make sure to install these dependencies before using `CalciumNetExploreR`. You can install these packages using the command `install.packages("package_name")`.
 
-Here is the list of dependencies:
-
--   **ggplot2**: For data visualization and plotting graphs.
--   **reshape2**: For data reshaping and melting data frames.
--   **ggdendro**: For creating dendrogram plots.
--   **cowplot**: For combining multiple plots into a single plot.
--   **ggpubr**: For publication-ready plots with additional theme options.
--   **grid**: For viewport manipulation and custom plot arrangements.
--   **igraph**: For creating and analyzing networks and graphs.
--   **ggraph**: For plotting networks and graphs with ggplot2.
--   **factoextra**: For visualizing PCA results and extracting eigenvalues.
--   **dplyr**: For data manipulation and summarization.
--   **RColorBrewer**: For color palettes used in plots.
--   **Readr**: to import data from .csv files
-
 ### Installation of Dependencies
 
 To ensure all dependencies are installed, you can run the following command:
