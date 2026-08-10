@@ -1,5 +1,7 @@
 # CalciumNetExploreR
 
+**UPDATE**: GUI version, compatible with Suite2p data here: https://github.com/simo-91/CalciumNetExploreR !
+
 **CalciumNetExploreR** is an R package designed for comprehensive calcium imaging data analysis, including normalization, binarization, network creation, and various advanced visualizations. The package provides an integrated pipeline to streamline the analysis of calcium imaging data from live imaging experiments. The reference paper is at https://doi.org/10.1186/s12859-025-06206-0
 
 ## Installation
