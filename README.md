@@ -117,7 +117,7 @@ print(events_per_min_results)
 
 **Normalization (`normalize`)** - Standardize calcium imaging data to a common scale for consistent analysis across cells and experiments.
 
-**Binarization (`binarize`)** - Convert normalized data to binary states to facilitate activity analysis by distinguishing active from inactive states.
+**Binarization (`binarize`)** - Convert normalized data to binary states (0 = cell off, 1 = cell on) to facilitate activity analysis by distinguishing active from inactive states.
 
 **Population Activity Analysis and Visualization (`population_activity`, `coactive_cells`, `active_cells_percentage`)** - **Hierarchical Clustering and Heatmaps**: Sort and display cell activity over time using hierarchical clustering, with optional dendrogram visualization. - **Coactive Cells Identification**: Calculate the percentage of coactive cells at each time point to assess synchronous activity across the population. - **Active Cells Percentage Calculation**: Compute the percentage of active cells over time to analyze overall population dynamics.
 
@@ -134,8 +134,6 @@ print(events_per_min_results)
 **Subset Extraction and Analysis (`get_subset`, `subset_connections`)** - **Data Subsetting**: Extract subsets of data based on specific criteria (e.g., cell types, regions) for focused analysis. - **Connection Subsetting**: Filter network connections to analyze specific interactions or sub-networks of interest.
 
 **Analysis of Labeled to Unlabeled Connections (`labeled_to_nonlabeled_connections`, `labeled_to_nonlabeled_connections_normalized`)** - Analyze and quantify the connections between labeled (e.g., genetically or chemically tagged) and unlabeled cells within the network, both in raw counts and normalized forms.
-
-**Degree-Based Subsetting (`degrees`)** - Identify cells with specific degree properties (e.g., high-degree hubs) for targeted analysis of their roles within the network.
 
 **Full Analysis Pipeline Execution (`full_pipeline`)** - Execute the entire analysis workflow with a single function, streamlining the process from raw data to results, including normalization, binarization, network construction, and feature extraction.
 
